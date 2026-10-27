@@ -1,5 +1,5 @@
 // A shared, quiet motion study: harmonic threads, coupled orbits, and a
-// perspective projection of a Möbius ribbon. No animation work runs offscreen.
+// projected ribbon, then six distinct field studies. Hidden tabs pause all work.
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const svgNS = 'http://www.w3.org/2000/svg';
@@ -15,12 +15,7 @@
 
   function clear() {
     if (field) {
-      field.paths.forEach((path, i) => {
-        path.setAttribute('d', field.originalPaths[i]);
-        path.removeAttribute('stroke-opacity');
-      });
-      for (const [name, value] of Object.entries(field.originalDot)) field.dot.setAttribute(name, value);
-      field.dot.removeAttribute('fill-opacity');
+      field.svg.innerHTML = field.originalMarkup;
       field.element.removeAttribute('data-motion-field');
     }
     if (wave) {
@@ -41,11 +36,14 @@
     if (art) {
       const paths = [...art.querySelectorAll('.contours path')];
       const dot = art.querySelector('.art-orbit');
-      if (paths.length && dot) {
+      const studies = window.websiteMotionStudies;
+      const study = studies?.names.includes(art.dataset.motionStudy) ? art.dataset.motionStudy : null;
+      if (paths.length && (dot || study)) {
+        const svg = art.querySelector('svg');
         field = {
-          element: art, paths, dot,
-          originalPaths: paths.map(path => path.getAttribute('d')),
-          originalDot: Object.fromEntries(['cx', 'cy', 'r'].map(name => [name, dot.getAttribute(name)])),
+          element: art, svg, paths, dot, study,
+          points: [...art.querySelectorAll('.study-point')],
+          originalMarkup: svg.innerHTML,
           width: paths.length < 9 ? 30 : paths.length < 18 ? 39 : 46,
         };
         art.setAttribute('data-motion-field', '');
@@ -111,7 +109,19 @@
   }
 
   function draw(t) {
-    if (field) {
+    if (field?.study) {
+      const picture = window.websiteMotionStudies.frame(field.study, t);
+      field.paths.forEach((path, i) => {
+        path.setAttribute('d', picture.paths[i].d);
+        path.setAttribute('stroke-opacity', picture.paths[i].opacity);
+      });
+      field.points.forEach((dot, i) => {
+        const point = picture.points[i];
+        for (const name of ['x', 'y', 'r', 'opacity']) {
+          dot.setAttribute(name === 'x' ? 'cx' : name === 'y' ? 'cy' : name, point[name].toFixed(3));
+        }
+      });
+    } else if (field) {
       const pose = ribbonPose(t);
       field.paths.forEach((path, i) => {
         const v = 3 + field.width * (i + 1) / field.paths.length;

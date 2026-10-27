@@ -48,10 +48,13 @@ def preview_script(document, archived=False):
 def motion_script(document, archived=False):
     prefix = "../../" if archived else "./"
     script = f'    <script src="{prefix}motion.js" defer></script>'
-    if script in document:
-        return document
-    target = f'    <script src="{prefix}version-nav.js" defer></script>'
-    return document.replace(target, target + "\n" + script, 1)
+    if script not in document:
+        target = f'    <script src="{prefix}version-nav.js" defer></script>'
+        document = document.replace(target, target + "\n" + script, 1)
+    studies = f'    <script src="{prefix}motion-studies.js" defer></script>'
+    if studies not in document:
+        document = document.replace(script, studies + "\n" + script, 1)
+    return document
 
 
 def without_navigation(document):
@@ -118,6 +121,7 @@ def main():
         archive = archive.replace('src="./version-nav.js"', 'src="../../version-nav.js"')
         archive = archive.replace('src="./version-previews.js"', 'src="../../version-previews.js"')
         archive = archive.replace('src="./motion.js"', 'src="../../motion.js"')
+        archive = archive.replace('src="./motion-studies.js"', 'src="../../motion-studies.js"')
         (folder / "index.html").write_text(archive)
         (folder / "styles.css").write_bytes((ROOT / "styles.css").read_bytes())
 

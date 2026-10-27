@@ -28,7 +28,7 @@ class VersionArchiveTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        for name in ["index.html", "styles.css", "versions.json", "version-previews.js", "version-entry.js", "motion.js"]:
+        for name in ["index.html", "styles.css", "versions.json", "version-previews.js", "version-entry.js", "motion.js", "motion-studies.js"]:
             shutil.copy2(SOURCE / name, self.root / name)
         for name in ["scripts", "versions"]:
             shutil.copytree(SOURCE / name, self.root / name)
@@ -75,6 +75,7 @@ class VersionArchiveTests(unittest.TestCase):
         newest = (self.root / f"versions/{self.next_id}/index.html").read_text()
         self.assertNotIn("version-entry.js", newest)
         self.assertIn('src="../../motion.js"', newest)
+        self.assertIn('src="../../motion-studies.js"', newest)
         self.assertIn("A little &lt;more&gt; &amp; less", newest)
         self.assertIn(f'data-current="{self.next_id}"', newest)
         self.assertIn(f'href="./versions/{self.next_id}/index.html" aria-current="page"', (self.root / "index.html").read_text())
@@ -89,6 +90,7 @@ class VersionArchiveTests(unittest.TestCase):
         self.assertEqual(page.count('src="./version-entry.js"'), 1)
         self.assertLess(page.index('src="./version-entry.js"'), page.index('rel="stylesheet"'))
         self.assertLess(page.index('src="./version-nav.js"'), page.index('src="./motion.js"'))
+        self.assertLess(page.index('src="./motion-studies.js"'), page.index('src="./motion.js"'))
         for number in self.ids:
             archive = (self.root / f"versions/{number}/index.html").read_text()
             self.assertNotIn("version-entry.js", archive)

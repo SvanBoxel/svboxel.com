@@ -124,6 +124,13 @@ body .content {
 /* Progressive enhancement keeps static artwork and CSS motion as fallbacks. */
 .ambient-art[data-motion-field] .art-drift,
 .ambient-art[data-motion-field] .art-orbit { animation: none; transform: none; }
+.ambient-art[data-motion-study] .art-drift { animation: none; transform: none; }
+.ambient-art[data-motion-study] .contours { stroke-width: .85; stroke-linecap: round; stroke-linejoin: round; }
+.study-point { fill: var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  .ambient-art[data-motion-study]:not([data-motion-field]) .contours { animation: study-fallback 12s ease-in-out infinite alternate; }
+}
+@keyframes study-fallback { from { opacity: .88; } to { opacity: 1; } }
 .intro-copy[data-motion-wave]::after { display: none; }
 .wave-thread { display: block; width: 96px; height: 16px; margin-top: 18px; overflow: visible; }
 .wave-thread path { fill: none; stroke: currentColor; stroke-width: .8; }
