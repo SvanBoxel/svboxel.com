@@ -28,7 +28,7 @@ def navigation(versions, current, archived=False):
         index = position + offset
         if 0 <= index < len(versions):
             target = versions[index]["id"]
-            return (f'<a class="version-step" href="{prefix}{target}/" '
+            return (f'<a class="version-step" href="{prefix}{target}/index.html" '
                     f'rel="{relation}" aria-label="{description}, version {target:02d}">{text}</a>')
         return f'<span class="version-step" aria-disabled="true" aria-label="{description} unavailable">{text}</span>'
 
@@ -39,7 +39,7 @@ def navigation(versions, current, archived=False):
         active = ' aria-current="page"' if number == current else ""
         newest = '<span class="version-latest">latest</span>' if number == latest else ""
         entries.append(
-            f'              <li><a href="{prefix}{number}/"{active}>'
+            f'              <li><a href="{prefix}{number}/index.html"{active}>'
             f'<span class="version-number">{number:02d}</span>'
             f'<span>{name}</span>{newest}</a></li>'
         )

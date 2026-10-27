@@ -1,13 +1,26 @@
 import json
+from html.parser import HTMLParser
 from pathlib import Path
 import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
+from urllib.parse import unquote, urljoin, urlsplit
 
 
 SOURCE = Path(__file__).resolve().parent.parent
+
+
+class InternalLinks(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.links = []
+
+    def handle_starttag(self, tag, attributes):
+        href = dict(attributes).get("href", "")
+        if tag == "a" and href and not urlsplit(href).scheme:
+            self.links.append(href)
 
 
 class VersionArchiveTests(unittest.TestCase):
@@ -55,13 +68,27 @@ class VersionArchiveTests(unittest.TestCase):
             page = (self.root / f"versions/{number}/index.html").read_text()
             self.assertEqual(self.without_navigation(page), self.without_navigation(old_pages[number]))
             self.assertEqual((self.root / f"versions/{number}/styles.css").read_bytes(), old_styles[number])
-            self.assertIn('href="../7/"', page)
+            self.assertIn('href="../7/index.html"', page)
             self.assertIn('href="../../version-nav.css"', page)
         newest = (self.root / "versions/7/index.html").read_text()
         self.assertIn("A little &lt;more&gt; &amp; less", newest)
         self.assertIn('aria-label="Next version unavailable"', newest)
-        self.assertIn('href="./versions/7/" aria-current="page"', (self.root / "index.html").read_text())
+        self.assertIn('href="./versions/7/index.html" aria-current="page"', (self.root / "index.html").read_text())
         self.assertEqual(len(json.loads((self.root / "versions.json").read_text())["versions"]), 7)
+
+    def test_version_links_open_html_files_locally_and_when_hosted(self):
+        pages = [self.root / "index.html", *sorted((self.root / "versions").glob("*/index.html"))]
+        for page in pages:
+            links = InternalLinks()
+            links.feed(page.read_text())
+            self.assertGreaterEqual(len(links.links), 6)
+            for href in links.links:
+                with self.subTest(page=page.relative_to(self.root), href=href):
+                    self.assertTrue(href.endswith("/index.html"))
+                    local = Path(unquote(urlsplit(urljoin(page.as_uri(), href)).path))
+                    self.assertTrue(local.is_file())
+                    hosted = urljoin("https://example.com/" + page.relative_to(self.root).as_posix(), href)
+                    self.assertEqual(urlsplit(hosted).path, "/" + local.relative_to(self.root).as_posix())
 
     def test_existing_archive_is_never_overwritten(self):
         folder = self.root / "versions/7"
