@@ -25,6 +25,7 @@ body::before, body::after {
 .site-footer { padding-right: 5vw; }
 
 .version-timeline {
+  --tick-step: min(24px, calc((min(500px, 60svh) - 8px) / var(--version-count, 15)));
   position: fixed;
   top: 50%;
   right: 24px;
@@ -52,7 +53,7 @@ body::before, body::after {
 
 .timeline-track {
   width: 100%;
-  max-height: min(360px, 60svh);
+  max-height: min(500px, 60svh);
   margin: 0;
   padding: 4px 0;
   overflow-y: auto;
@@ -72,9 +73,10 @@ body::before, body::after {
   align-items: center;
   justify-content: flex-end;
   width: 100%;
-  height: 24px;
+  height: var(--tick-step);
   padding-inline: 4px;
   text-decoration: none;
+  transition: none;
   cursor: pointer;
   -webkit-user-drag: none;
 }
@@ -110,6 +112,7 @@ body::before, body::after {
 .tick-name { display: none; }
 .timeline-tick.is-selected .tick-label { opacity: .75; }
 .timeline-tick:hover .tick-label, .timeline-tick:focus-visible .tick-label { opacity: 1; }
+.timeline-track:hover .is-selected:not(:hover) .tick-label { opacity: 0; }
 
 .version-timeline:is(:hover, :focus-within, [data-interacting="true"]) .is-selected .tick-name,
 .timeline-tick:hover .tick-name,

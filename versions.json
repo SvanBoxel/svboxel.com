@@ -1,6 +1,46 @@
 {
   "versions": [
     {
+      "id": -10,
+      "name": "Just the words"
+    },
+    {
+      "id": -9,
+      "name": "A little whitespace"
+    },
+    {
+      "id": -8,
+      "name": "A line of thought"
+    },
+    {
+      "id": -7,
+      "name": "A softer voice"
+    },
+    {
+      "id": -6,
+      "name": "Room for a conversation"
+    },
+    {
+      "id": -5,
+      "name": "A warmer page"
+    },
+    {
+      "id": -4,
+      "name": "An open shape"
+    },
+    {
+      "id": -3,
+      "name": "The first circle"
+    },
+    {
+      "id": -2,
+      "name": "A second shape"
+    },
+    {
+      "id": -1,
+      "name": "Almost familiar"
+    },
+    {
       "id": 1,
       "name": "Peach & sage"
     },

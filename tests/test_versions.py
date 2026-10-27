@@ -28,7 +28,7 @@ class VersionArchiveTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        for name in ["index.html", "styles.css", "versions.json", "version-previews.js"]:
+        for name in ["index.html", "styles.css", "versions.json", "version-previews.js", "version-entry.js"]:
             shutil.copy2(SOURCE / name, self.root / name)
         for name in ["scripts", "versions"]:
             shutil.copytree(SOURCE / name, self.root / name)
@@ -73,10 +73,23 @@ class VersionArchiveTests(unittest.TestCase):
             self.assertIn(f'href="../{self.next_id}/index.html"', page)
             self.assertIn('href="../../version-nav.css"', page)
         newest = (self.root / f"versions/{self.next_id}/index.html").read_text()
+        self.assertNotIn("version-entry.js", newest)
         self.assertIn("A little &lt;more&gt; &amp; less", newest)
         self.assertIn(f'data-current="{self.next_id}"', newest)
         self.assertIn(f'href="./versions/{self.next_id}/index.html" aria-current="page"', (self.root / "index.html").read_text())
         self.assertEqual(len(json.loads((self.root / "versions.json").read_text())["versions"]), len(self.ids) + 1)
+        self.assertIn(f", {self.next_id}];", (self.root / "version-entry.js").read_text())
+
+    def test_only_homepage_randomizes_and_includes_the_complete_chronological_archive(self):
+        entry = (self.root / "version-entry.js").read_text()
+        ids = json.loads(entry.split("const versions = ", 1)[1].split(";", 1)[0])
+        self.assertEqual(ids, self.ids)
+        page = (self.root / "index.html").read_text()
+        self.assertEqual(page.count('src="./version-entry.js"'), 1)
+        self.assertLess(page.index('src="./version-entry.js"'), page.index('rel="stylesheet"'))
+        for number in self.ids:
+            self.assertNotIn("version-entry.js", (self.root / f"versions/{number}/index.html").read_text())
+        self.assertTrue(any(number < 0 for number in ids))
 
     def test_version_links_open_html_files_locally_and_when_hosted(self):
         pages = [self.root / "index.html", *sorted((self.root / "versions").glob("*/index.html"))]

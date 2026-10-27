@@ -92,7 +92,7 @@ if (timeline) {
     });
     lens(selected);
     reveal(selected);
-    readout.textContent = `${ticks[selected].dataset.version.padStart(2, '0')} / ${String(ticks.length).padStart(2, '0')}`;
+    readout.textContent = `${String(selected + 1).padStart(2, '0')} / ${String(ticks.length).padStart(2, '0')}`;
     timeline.dataset.interacting = 'true';
     if (changed) preview(selected);
   }
@@ -117,7 +117,8 @@ if (timeline) {
 
   function atPointer(y) {
     const bounds = track.getBoundingClientRect();
-    return clamp(Math.round((y - bounds.top + track.scrollTop - 4) / 24 - .5));
+    const step = ticks[0].getBoundingClientRect().height;
+    return clamp(Math.round((y - bounds.top + track.scrollTop - 4) / step - .5));
   }
 
   ticks.forEach((tick, index) => { tick.tabIndex = index === viewed ? 0 : -1; });
