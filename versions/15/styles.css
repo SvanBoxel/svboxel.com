@@ -86,13 +86,13 @@ body .content {
 /* The original circles have opened into gently moving contours. */
 .ambient-art { position: relative; width: 100%; pointer-events: none; }
 .ambient-art svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.art-drift { transform-origin: 50% 50%; animation: drift 28s ease-in-out infinite alternate; }
+.art-drift { transform-origin: 50% 50%; animation: drift 8s ease-in-out -2s infinite alternate; }
 .contours { fill: none; stroke: var(--line); stroke-width: .85; }
 .art-wash { fill: var(--cool); opacity: .16; }
 .art-orbit { fill: var(--warm); opacity: .9; }
 @keyframes drift {
-  from { transform: translate(-3px, 3px) rotate(-1deg); }
-  to { transform: translate(4px, -5px) rotate(1deg); }
+  from { transform: translate(-10px, 8px) rotate(-4deg); }
+  to { transform: translate(12px, -10px) rotate(4deg); }
 }
 
 .content .site-footer { padding: 22px 0 0; border-top: 1px solid var(--rule); }
@@ -127,3 +127,13 @@ body .content {
 @media (prefers-reduced-motion: reduce) {
   .art-drift { animation: none; }
 }
+
+/* Independent orbit makes the artwork visibly alive within a short visit. */
+@media (prefers-reduced-motion: no-preference) {
+  .art-orbit {
+    transform-box: view-box;
+    transform-origin: 260px 260px;
+    animation: orbit 24s linear -3s infinite;
+  }
+}
+@keyframes orbit { to { transform: rotate(360deg); } }

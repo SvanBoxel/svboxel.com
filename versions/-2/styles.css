@@ -2,49 +2,49 @@
 
 @-webkit-keyframes a {
   0% {
-    -webkit-transform: translate3d(-5%,0,0);
-    transform: translate3d(-5%,0,0)
+    -webkit-transform: translate3d(-8%,0,0);
+    transform: translate3d(-8%,0,0)
   }
 
   to {
-    -webkit-transform: translate3d(5%,0,0);
-    transform: translate3d(5%,0,0)
+    -webkit-transform: translate3d(8%,0,0);
+    transform: translate3d(8%,0,0)
   }
 }
 
 @keyframes a {
   0% {
-    -webkit-transform: translate3d(-5%,0,0);
-    transform: translate3d(-5%,0,0)
+    -webkit-transform: translate3d(-8%,0,0);
+    transform: translate3d(-8%,0,0)
   }
 
   to {
-    -webkit-transform: translate3d(5%,0,0);
-    transform: translate3d(5%,0,0)
+    -webkit-transform: translate3d(8%,0,0);
+    transform: translate3d(8%,0,0)
   }
 }
 
 @-webkit-keyframes b {
   0% {
-    -webkit-transform: translate3d(0,10%,0);
-    transform: translate3d(0,10%,0)
+    -webkit-transform: translate3d(0,12%,0);
+    transform: translate3d(0,12%,0)
   }
 
   to {
-    -webkit-transform: translate3d(0,-10%,0);
-    transform: translate3d(0,-10%,0)
+    -webkit-transform: translate3d(0,-12%,0);
+    transform: translate3d(0,-12%,0)
   }
 }
 
 @keyframes b {
   0% {
-    -webkit-transform: translate3d(0,10%,0);
-    transform: translate3d(0,10%,0)
+    -webkit-transform: translate3d(0,12%,0);
+    transform: translate3d(0,12%,0)
   }
 
   to {
-    -webkit-transform: translate3d(0,-10%,0);
-    transform: translate3d(0,-10%,0)
+    -webkit-transform: translate3d(0,-12%,0);
+    transform: translate3d(0,-12%,0)
   }
 }
 
@@ -87,10 +87,10 @@ body:before {
   width: 110vh;
   height: 110vh;
   background-color: #f5e9df;
-  -webkit-transform: translate3d(-5%,0,0);
-  transform: translate3d(-5%,0,0);
-  -webkit-animation: a 20s cubic-bezier(.455,.03,.515,.955) infinite alternate;
-  animation: a 20s cubic-bezier(.455,.03,.515,.955) infinite alternate
+  -webkit-transform: translate3d(-8%,0,0);
+  transform: translate3d(-8%,0,0);
+  -webkit-animation: a 12s ease-in-out -3s infinite alternate;
+  animation: a 12s ease-in-out -3s infinite alternate
 }
 
 body:after {
@@ -100,10 +100,10 @@ body:after {
   height: 45vh;
   opacity: .5;
   background-color: #dfe6e3;
-  -webkit-transform: translate3d(0,10%,0);
-  transform: translate3d(0,10%,0);
-  -webkit-animation: b 15s 2s cubic-bezier(.455,.03,.515,.955) infinite alternate;
-  animation: b 15s 2s cubic-bezier(.455,.03,.515,.955) infinite alternate
+  -webkit-transform: translate3d(0,12%,0);
+  transform: translate3d(0,12%,0);
+  -webkit-animation: b 10s ease-in-out -4s infinite alternate;
+  animation: b 10s ease-in-out -4s infinite alternate
 }
 
 @media (min-width: 600px) {

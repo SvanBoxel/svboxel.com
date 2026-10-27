@@ -35,13 +35,13 @@ body .content {
 .introduction { margin-bottom: 10vh; }
 .bio { max-width: 640px; font: var(--headline-weight) var(--headline-size)/1.2 var(--headline-font); letter-spacing: -.035em; }
 .intro-copy::after {
-  content: ''; display: block; width: 48px; height: 1px;
+  content: ''; display: block; width: 88px; height: 2px;
   margin-top: 32px; background: currentColor;
   transform-origin: left center;
-  animation: ink 8s ease-in-out infinite alternate;
+  animation: ink 3.2s ease-in-out -.8s infinite alternate;
 }
-@keyframes ink { from { opacity: .3; transform: scaleX(.8); } to { opacity: .65; transform: scaleX(1); } }
-@keyframes circle { from { transform: translateX(-2%); } to { transform: translateX(2%); } }
+@keyframes ink { from { opacity: .35; transform: translateX(0) scaleX(.3); } to { opacity: .9; transform: translateX(12px) scaleX(1); } }
+@keyframes circle { from { transform: translateX(-8%); } to { transform: translateX(8%); } }
 .content .site-footer { padding: 0; }
 .links { list-style: none; font-size: 11px; line-height: 1.9; }
 .links__item:first-child { margin-bottom: 10px; }

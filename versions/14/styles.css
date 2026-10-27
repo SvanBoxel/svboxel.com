@@ -40,16 +40,16 @@ body::before, body::after {
 body::before {
   width: 110vh; height: 110vh; top: 15vh; right: -57vh;
   background: var(--warm);
-  animation: a 24s ease-in-out infinite alternate;
+  animation: a 12s ease-in-out -3s infinite alternate;
 }
 body::after {
   width: 45vh; height: 45vh; top: -18vh; right: -20vh;
   background: var(--cool); opacity: .5;
-  animation: b 19s ease-in-out infinite alternate;
+  animation: b 10s ease-in-out -4s infinite alternate;
 }
-@keyframes a { from { transform: translateX(-3%); } to { transform: translateX(3%); } }
-@keyframes b { from { transform: translateY(5%); } to { transform: translateY(-5%); } }
-@keyframes drift { from { transform: translate(-3px, 3px) rotate(-1deg); } to { transform: translate(4px, -5px) rotate(1deg); } }
+@keyframes a { from { transform: translateX(-8%); } to { transform: translateX(8%); } }
+@keyframes b { from { transform: translateY(12%); } to { transform: translateY(-12%); } }
+@keyframes drift { from { transform: translate(-10px, 8px) rotate(-4deg); } to { transform: translate(12px, -10px) rotate(4deg); } }
 body .content {
   position: relative; z-index: 1;
   display: flex; flex-direction: column; justify-content: space-between;
@@ -69,7 +69,7 @@ body .content {
 .serif { font-family: 'Cormorant Garamond', serif; font-weight: 700; }
 .ambient-art { pointer-events: none; }
 .ambient-art svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.art-drift { transform-origin: 50% 50%; animation: drift 28s ease-in-out infinite alternate; }
+.art-drift { transform-origin: 50% 50%; animation: drift 8s ease-in-out -2s infinite alternate; }
 .contours { stroke: var(--line); }
 .art-wash { fill: var(--cool); opacity: .25; }
 .art-orbit { fill: var(--warm); opacity: .7; }
@@ -176,3 +176,13 @@ body::before, body::after { display: none; }
 @media (min-width: 600px) and (max-width: 899px) {
   body { padding-right: 22vw; }
 }
+
+/* Independent orbit makes the artwork visibly alive within a short visit. */
+@media (prefers-reduced-motion: no-preference) {
+  .art-orbit {
+    transform-box: view-box;
+    transform-origin: 260px 260px;
+    animation: orbit 24s linear -3s infinite;
+  }
+}
+@keyframes orbit { to { transform: rotate(360deg); } }
