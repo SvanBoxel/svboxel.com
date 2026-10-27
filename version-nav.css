@@ -137,6 +137,8 @@ body::before, body::after {
   .tick-line { width: 30px; }
   .tick-label { right: 44px; max-width: calc(100vw - 80px); }
   .timeline-heading { font-size: 8px; }
+  .timeline-tick.is-selected .tick-label { opacity: 0; }
+  .version-timeline:is(:hover, :focus-within, [data-interacting="true"]) .is-selected .tick-label { opacity: 1; }
 }
 
 @media (min-width: 600px) and (max-width: 700px) {
@@ -145,8 +147,6 @@ body::before, body::after {
 
 @media (max-width: 359px) {
   .content { box-sizing: border-box; padding-right: 24px; }
-  .timeline-tick.is-selected .tick-label { opacity: 0; }
-  .version-timeline:is(:hover, :focus-within, [data-interacting="true"]) .is-selected .tick-label { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

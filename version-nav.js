@@ -8,6 +8,10 @@ if (timeline) {
   const viewed = ticks.findIndex(tick => tick.hasAttribute('aria-current'));
   const design = document.querySelector('link[rel="stylesheet"]');
   const shared = document.querySelector('link[href$="version-nav.css"]');
+  const previews = window.websiteVersionPreviews || {};
+  // Keep the interactive rail mounted while the version's page elements change.
+  document.body.append(timeline);
+  const originalContent = document.querySelector('.content').cloneNode(true);
   let selected = viewed;
   let timer;
   let wheelDelta = 0;
@@ -40,8 +44,11 @@ if (timeline) {
     if (index === viewed) {
       design.disabled = false;
       if (previewStyle) { previewStyle.remove(); previewStyle = null; }
+      document.querySelector('.content').replaceWith(originalContent.cloneNode(true));
       return;
     }
+    const markup = previews[ticks[index].dataset.version];
+    if (!markup) return;
     const stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
     stylesheet.href = new URL('styles.css', ticks[index].href).href;
@@ -51,6 +58,19 @@ if (timeline) {
       if (selected !== index || pendingStyle !== stylesheet) { stylesheet.remove(); return; }
       stylesheet.media = 'all';
       design.disabled = true;
+      const source = new DOMParser().parseFromString(markup, 'text/html').querySelector('.content');
+      if (source) {
+        const content = document.importNode(source, true);
+        for (const element of content.querySelectorAll('[href], [src]')) {
+          for (const attribute of ['href', 'src']) {
+            const value = element.getAttribute(attribute);
+            if (value && !value.startsWith('#')) {
+              element.setAttribute(attribute, new URL(value, ticks[index].href).href);
+            }
+          }
+        }
+        document.querySelector('.content').replaceWith(content);
+      }
       if (previewStyle) previewStyle.remove();
       previewStyle = stylesheet;
       pendingStyle = null;

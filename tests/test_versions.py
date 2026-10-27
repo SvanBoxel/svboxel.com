@@ -28,7 +28,7 @@ class VersionArchiveTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        for name in ["index.html", "styles.css", "versions.json"]:
+        for name in ["index.html", "styles.css", "versions.json", "version-previews.js"]:
             shutil.copy2(SOURCE / name, self.root / name)
         for name in ["scripts", "versions"]:
             shutil.copytree(SOURCE / name, self.root / name)
@@ -100,6 +100,27 @@ class VersionArchiveTests(unittest.TestCase):
         result = self.run_archive("--add", "Another version")
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual(self.snapshot(), before)
+
+    def test_preview_bundle_includes_archived_text_and_elements_without_navigation(self):
+        source = (self.root / "version-previews.js").read_text()
+        self.assertTrue(source.startswith("window.websiteVersionPreviews = "))
+        previews = json.loads(source.split(" = ", 1)[1].removesuffix(";\n"))
+        self.assertEqual(set(previews), {str(number) for number in self.ids})
+        for number in self.ids:
+            archived = (self.root / f"versions/{number}/index.html").read_text()
+            self.assertEqual(previews[str(number)], self.without_navigation(archived))
+            self.assertNotIn('class="version-nav', previews[str(number)])
+            self.assertIn('src="../../version-previews.js"', archived)
+
+    def test_new_copy_is_captured_in_the_next_preview(self):
+        page = self.root / "index.html"
+        page.write_text(page.read_text().replace("<h1 class=\"title\">", '<p class="fresh-note">A new perspective.</p><h1 class="title">'))
+        result = self.run_archive("--add", "A new perspective")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        source = (self.root / "version-previews.js").read_text()
+        previews = json.loads(source.split(" = ", 1)[1].removesuffix(";\n"))
+        self.assertIn('class="fresh-note"', previews[str(self.next_id)])
+        self.assertNotIn('class="fresh-note"', previews[str(self.ids[-1])])
 
 
 if __name__ == "__main__":
