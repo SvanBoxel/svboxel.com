@@ -32,6 +32,8 @@ class VersionArchiveTests(unittest.TestCase):
             shutil.copy2(SOURCE / name, self.root / name)
         for name in ["scripts", "versions"]:
             shutil.copytree(SOURCE / name, self.root / name)
+        self.ids = [version["id"] for version in json.loads((self.root / "versions.json").read_text())["versions"]]
+        self.next_id = self.ids[-1] + 1
 
     def run_archive(self, *arguments):
         return subprocess.run(
@@ -56,32 +58,32 @@ class VersionArchiveTests(unittest.TestCase):
 
     def test_new_version_preserves_old_designs_and_updates_navigation(self):
         old_pages = {number: (self.root / f"versions/{number}/index.html").read_text()
-                     for number in range(1, 7)}
+                     for number in self.ids}
         old_styles = {number: (self.root / f"versions/{number}/styles.css").read_bytes()
-                      for number in range(1, 7)}
+                      for number in self.ids}
         stylesheet = self.root / "styles.css"
         stylesheet.write_text(stylesheet.read_text() + "\n/* The next small evolution. */\n")
         result = self.run_archive("--add", "A little <more> & less")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual((self.root / "versions/7/styles.css").read_bytes(), stylesheet.read_bytes())
-        for number in range(1, 7):
+        self.assertEqual((self.root / f"versions/{self.next_id}/styles.css").read_bytes(), stylesheet.read_bytes())
+        for number in self.ids:
             page = (self.root / f"versions/{number}/index.html").read_text()
             self.assertEqual(self.without_navigation(page), self.without_navigation(old_pages[number]))
             self.assertEqual((self.root / f"versions/{number}/styles.css").read_bytes(), old_styles[number])
-            self.assertIn('href="../7/index.html"', page)
+            self.assertIn(f'href="../{self.next_id}/index.html"', page)
             self.assertIn('href="../../version-nav.css"', page)
-        newest = (self.root / "versions/7/index.html").read_text()
+        newest = (self.root / f"versions/{self.next_id}/index.html").read_text()
         self.assertIn("A little &lt;more&gt; &amp; less", newest)
-        self.assertIn('aria-label="Next version unavailable"', newest)
-        self.assertIn('href="./versions/7/index.html" aria-current="page"', (self.root / "index.html").read_text())
-        self.assertEqual(len(json.loads((self.root / "versions.json").read_text())["versions"]), 7)
+        self.assertIn(f'data-current="{self.next_id}"', newest)
+        self.assertIn(f'href="./versions/{self.next_id}/index.html" aria-current="page"', (self.root / "index.html").read_text())
+        self.assertEqual(len(json.loads((self.root / "versions.json").read_text())["versions"]), len(self.ids) + 1)
 
     def test_version_links_open_html_files_locally_and_when_hosted(self):
         pages = [self.root / "index.html", *sorted((self.root / "versions").glob("*/index.html"))]
         for page in pages:
             links = InternalLinks()
             links.feed(page.read_text())
-            self.assertGreaterEqual(len(links.links), 6)
+            self.assertEqual(len(links.links), len(self.ids))
             for href in links.links:
                 with self.subTest(page=page.relative_to(self.root), href=href):
                     self.assertTrue(href.endswith("/index.html"))
@@ -91,7 +93,7 @@ class VersionArchiveTests(unittest.TestCase):
                     self.assertEqual(urlsplit(hosted).path, "/" + local.relative_to(self.root).as_posix())
 
     def test_existing_archive_is_never_overwritten(self):
-        folder = self.root / "versions/7"
+        folder = self.root / f"versions/{self.next_id}"
         folder.mkdir()
         (folder / "styles.css").write_text("preserve this archive")
         before = self.snapshot()

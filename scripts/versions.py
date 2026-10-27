@@ -11,6 +11,7 @@ rewritten; only their shared navigation links are updated as the archive grows.
 import argparse
 import html
 import json
+import math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -21,41 +22,29 @@ END = "<!-- VERSION NAV END -->"
 def navigation(versions, current, archived=False):
     prefix = "../" if archived else "./versions/"
     position = next(i for i, version in enumerate(versions) if version["id"] == current)
-    latest = versions[-1]["id"]
-    label = f"Version {current:02d}"
-
-    def step(offset, text, relation, description):
-        index = position + offset
-        if 0 <= index < len(versions):
-            target = versions[index]["id"]
-            return (f'<a class="version-step" href="{prefix}{target}/index.html" '
-                    f'rel="{relation}" aria-label="{description}, version {target:02d}">{text}</a>')
-        return f'<span class="version-step" aria-disabled="true" aria-label="{description} unavailable">{text}</span>'
-
     entries = []
-    for version in reversed(versions):
+    for index, version in enumerate(versions):
         number = version["id"]
         name = html.escape(version["name"])
-        active = ' aria-current="page"' if number == current else ""
-        newest = '<span class="version-latest">latest</span>' if number == latest else ""
+        active = ' aria-current="page" class="timeline-tick is-selected"' if number == current else ' class="timeline-tick"'
+        proximity = math.exp(-abs(index - position) * .55)
         entries.append(
-            f'              <li><a href="{prefix}{number}/index.html"{active}>'
-            f'<span class="version-number">{number:02d}</span>'
-            f'<span>{name}</span>{newest}</a></li>'
+            f'          <li><a href="{prefix}{number}/index.html"{active}'
+            f' data-version="{number}" aria-label="Version {number:02d}: {name}"'
+            f' style="--tick-scale: {.24 + .76 * proximity:.4f}; --tick-opacity: {.38 + .54 * proximity:.4f}">'
+            f'<span class="tick-label" aria-hidden="true"><span class="tick-number">{number:02d}</span>'
+            f'<span class="tick-name">{name}</span></span>'
+            f'<span class="tick-line" aria-hidden="true"></span></a></li>'
         )
 
     return "\n".join([
         START,
-        '      <nav class="version-nav" aria-label="Website versions">',
-        "        " + step(-1, "←", "prev", "Previous version"),
-        '        <details class="version-picker">',
-        f'          <summary aria-label="Choose a version, viewing {current:02d} of {len(versions):02d}">'
-        f'{label}<span class="version-total">/ {len(versions):02d}</span></summary>',
-        '          <ol class="version-list" reversed>',
+        f'      <nav class="version-nav version-timeline" aria-label="Website versions" data-current="{current}">',
+        '        <span class="timeline-heading">Versions</span>',
+        '        <ol class="timeline-track">',
         *entries,
-        '          </ol>',
-        '        </details>',
-        "        " + step(1, "→", "next", "Next version"),
+        '        </ol>',
+        f'        <output class="timeline-position" aria-live="polite" aria-atomic="true">{current:02d} / {len(versions):02d}</output>',
         '      </nav>',
         "      " + END,
     ])

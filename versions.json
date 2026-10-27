@@ -23,6 +23,26 @@
     {
       "id": 6,
       "name": "Slower drift"
+    },
+    {
+      "id": 7,
+      "name": "Softer overlap"
+    },
+    {
+      "id": 8,
+      "name": "Room between letters"
+    },
+    {
+      "id": 9,
+      "name": "Paper warmth"
+    },
+    {
+      "id": 10,
+      "name": "Quieter sage"
+    },
+    {
+      "id": 11,
+      "name": "Unhurried motion"
     }
   ]
 }

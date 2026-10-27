@@ -67,7 +67,7 @@ body {
   font: 200 36px Nunito Sans,sans-serif;
   line-height: 1.1;
   color: #252222;
-  background-color: #fbf9f6;
+  background-color: #faf8f4;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased
 }
@@ -98,12 +98,12 @@ body:after {
   right: -20vh;
   width: 45vh;
   height: 45vh;
-  opacity: .5;
-  background-color: #dfe6e3;
+  opacity: .46;
+  background-color: #dce4df;
   -webkit-transform: translate3d(0,10%,0);
   transform: translate3d(0,10%,0);
-  -webkit-animation: b 15s 2s cubic-bezier(.455,.03,.515,.955) infinite alternate;
-  animation: b 15s 2s cubic-bezier(.455,.03,.515,.955) infinite alternate
+  -webkit-animation: b 21s 2s cubic-bezier(.455,.03,.515,.955) infinite alternate;
+  animation: b 21s 2s cubic-bezier(.455,.03,.515,.955) infinite alternate
 }
 
 @media (min-width: 600px) {
@@ -218,7 +218,8 @@ a:focus:after,a:hover:after {
 .bio {
   margin-bottom: 25vh;
   max-width: 440px;
-  line-height: 1.16
+  line-height: 1.16;
+  letter-spacing: .004em
 }
 
 @media (min-width: 600px) {
