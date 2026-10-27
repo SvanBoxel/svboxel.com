@@ -35,7 +35,7 @@ body::before, body::after {
   width: 64px;
   max-height: calc(100svh - 48px);
   transform: translateY(-50%);
-  color: #252222;
+  color: var(--timeline-ink, #252222);
   font: 400 11px/1.5 Nunito Sans, sans-serif;
   user-select: none;
   -webkit-user-select: none;
@@ -117,7 +117,7 @@ body::before, body::after {
 
 .version-timeline:is(:hover, :focus-within, [data-interacting="true"]) .is-selected .tick-label,
 .timeline-tick:hover .tick-label,
-.timeline-tick:focus-visible .tick-label { background: #fbf9f6ed; }
+.timeline-tick:focus-visible .tick-label { background: var(--timeline-paper, #fbf9f6ed); }
 
 .version-timeline[data-dragging="true"] { cursor: grabbing; }
 .version-timeline[data-dragging="true"] .timeline-tick { cursor: grabbing; }
@@ -142,7 +142,7 @@ body::before, body::after {
 }
 
 @media (min-width: 600px) and (max-width: 700px) {
-  .content { box-sizing: border-box; padding-right: 96px; }
+  .content { box-sizing: border-box; padding-right: 128px; }
 }
 
 @media (max-width: 359px) {

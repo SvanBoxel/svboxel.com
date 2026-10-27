@@ -6,47 +6,59 @@
     },
     {
       "id": 2,
-      "name": "Warm paper"
+      "name": "A sense of place"
     },
     {
       "id": 3,
-      "name": "A clearer voice"
+      "name": "People in mind"
     },
     {
       "id": 4,
-      "name": "Room to breathe"
+      "name": "A clearer voice"
     },
     {
       "id": 5,
-      "name": "Wider margins"
+      "name": "A little perspective"
     },
     {
       "id": 6,
-      "name": "Circles in conversation"
+      "name": "Opening the circle"
     },
     {
       "id": 7,
-      "name": "A softer intersection"
+      "name": "A connecting line"
     },
     {
       "id": 8,
-      "name": "A stronger introduction"
+      "name": "Finding a balance"
     },
     {
       "id": 9,
-      "name": "Clay & eucalyptus"
+      "name": "A page, composed"
     },
     {
       "id": 10,
-      "name": "Unhurried motion"
+      "name": "A human perspective"
     },
     {
       "id": 11,
-      "name": "More air"
+      "name": "An invitation"
     },
     {
       "id": 12,
-      "name": "A human introduction"
+      "name": "Blue hour"
+    },
+    {
+      "id": 13,
+      "name": "Dusk"
+    },
+    {
+      "id": 14,
+      "name": "Into the evening"
+    },
+    {
+      "id": 15,
+      "name": "A human approach"
     }
   ]
 }
