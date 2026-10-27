@@ -139,6 +139,16 @@ body::before, body::after {
   .timeline-heading { font-size: 8px; }
 }
 
+@media (min-width: 600px) and (max-width: 700px) {
+  .content { box-sizing: border-box; padding-right: 96px; }
+}
+
+@media (max-width: 359px) {
+  .content { box-sizing: border-box; padding-right: 24px; }
+  .timeline-tick.is-selected .tick-label { opacity: 0; }
+  .version-timeline:is(:hover, :focus-within, [data-interacting="true"]) .is-selected .tick-label { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   body::before, body::after { -webkit-animation: none; animation: none; }
   body, body::before, body::after, .tick-line, .tick-label { transition: none; }

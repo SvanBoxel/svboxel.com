@@ -67,7 +67,7 @@ body {
   font: 200 36px Nunito Sans,sans-serif;
   line-height: 1.1;
   color: #252222;
-  background-color: #faf8f4;
+  background-color: #faf8f2;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased
 }
@@ -82,11 +82,11 @@ body:after,body:before {
 }
 
 body:before {
-  top: 15vh;
-  right: -57vh;
-  width: 110vh;
-  height: 110vh;
-  background-color: #f1e5dc;
+  top: 24vh;
+  right: -52vh;
+  width: 92vh;
+  height: 92vh;
+  background-color: #e8c9b5;
   -webkit-transform: translate3d(-5%,0,0);
   transform: translate3d(-5%,0,0);
   -webkit-animation: a 26s cubic-bezier(.455,.03,.515,.955) infinite alternate;
@@ -94,54 +94,54 @@ body:before {
 }
 
 body:after {
-  top: -18vh;
-  right: -20vh;
-  width: 45vh;
-  height: 45vh;
-  opacity: .46;
-  background-color: #dce4df;
+  top: -14vh;
+  right: -22vh;
+  width: 52vh;
+  height: 52vh;
+  opacity: .62;
+  background-color: #bbd0c5;
   -webkit-transform: translate3d(0,10%,0);
   transform: translate3d(0,10%,0);
-  -webkit-animation: b 15s 2s cubic-bezier(.455,.03,.515,.955) infinite alternate;
-  animation: b 15s 2s cubic-bezier(.455,.03,.515,.955) infinite alternate
+  -webkit-animation: b 21s 2s cubic-bezier(.455,.03,.515,.955) infinite alternate;
+  animation: b 21s 2s cubic-bezier(.455,.03,.515,.955) infinite alternate
 }
 
 @media (min-width: 600px) {
   body {
-    padding:48px 0 48px 15vw;
+    padding:48px 0 48px 13vw;
     font-size: 48px
   }
 }
 
 @media (min-width: 600px) and (max-width:1023px) {
   body:before {
-    top:15vh;
-    right: -50vw;
-    width: 130vw;
-    height: 130vw
-  }
-
-  body:after {
-    top: -25vh;
-    right: -20vw;
-    width: 65vw;
-    height: 65vw
-  }
-}
-
-@media (min-width: 1024px) {
-  body:before {
-    top:8vh;
-    right: -26vw;
+    top:20vh;
+    right: -45vw;
     width: 110vw;
     height: 110vw
   }
 
   body:after {
-    top: -45vh;
-    right: -12vw;
-    width: 55vw;
-    height: 55vw
+    top: -22vh;
+    right: -25vw;
+    width: 72vw;
+    height: 72vw
+  }
+}
+
+@media (min-width: 1024px) {
+  body:before {
+    top:16vh;
+    right: -24vw;
+    width: 88vw;
+    height: 88vw
+  }
+
+  body:after {
+    top: -36vh;
+    right: -18vw;
+    width: 64vw;
+    height: 64vw
   }
 }
 
@@ -206,8 +206,8 @@ a:focus:after,a:hover:after {
 }
 
 .title {
-  font-size: 24px;
-  letter-spacing: .015em
+  font-size: 28px;
+  letter-spacing: .01em
 }
 
 .links,.title {
@@ -217,14 +217,15 @@ a:focus:after,a:hover:after {
 
 .bio {
   margin-bottom: 25vh;
-  max-width: 440px;
-  line-height: 1.16;
-  letter-spacing: .004em
+  max-width: 560px;
+  font-size: 38px;
+  line-height: 1.15
 }
 
 @media (min-width: 600px) {
   .bio {
-    margin-bottom:37vh
+    margin-bottom:37vh;
+    font-size: clamp(50px, 4.45vw, 64px)
   }
 }
 

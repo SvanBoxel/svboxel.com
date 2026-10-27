@@ -67,7 +67,7 @@ body {
   font: 200 36px Nunito Sans,sans-serif;
   line-height: 1.1;
   color: #252222;
-  background-color: #fbf9f6;
+  background-color: #faf8f2;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased
 }
@@ -216,13 +216,14 @@ a:focus:after,a:hover:after {
 
 .bio {
   margin-bottom: 25vh;
-  max-width: 440px;
-  line-height: 1.16
+  max-width: 560px;
+  font-size: 38px
 }
 
 @media (min-width: 600px) {
   .bio {
-    margin-bottom:37vh
+    margin-bottom:37vh;
+    font-size: clamp(50px, 4.45vw, 64px)
   }
 }
 

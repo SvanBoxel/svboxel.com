@@ -67,7 +67,7 @@ body {
   font: 200 36px Nunito Sans,sans-serif;
   line-height: 1.1;
   color: #252222;
-  background-color: #fbf9f6;
+  background-color: #faf8f2;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased
 }
@@ -86,7 +86,7 @@ body:before {
   right: -57vh;
   width: 110vh;
   height: 110vh;
-  background-color: #f1e5dc;
+  background-color: #f5e9df;
   -webkit-transform: translate3d(-5%,0,0);
   transform: translate3d(-5%,0,0);
   -webkit-animation: a 20s cubic-bezier(.455,.03,.515,.955) infinite alternate;
@@ -108,7 +108,7 @@ body:after {
 
 @media (min-width: 600px) {
   body {
-    padding:48px 0 48px 15vw;
+    padding:48px 0 48px 13vw;
     font-size: 48px
   }
 }
@@ -206,8 +206,7 @@ a:focus:after,a:hover:after {
 }
 
 .title {
-  font-size: 24px;
-  letter-spacing: .015em
+  font-size: 24px
 }
 
 .links,.title {
@@ -217,13 +216,15 @@ a:focus:after,a:hover:after {
 
 .bio {
   margin-bottom: 25vh;
-  max-width: 440px;
-  line-height: 1.16
+  max-width: 560px;
+  font-size: 38px;
+  line-height: 1.15
 }
 
 @media (min-width: 600px) {
   .bio {
-    margin-bottom:37vh
+    margin-bottom:37vh;
+    font-size: clamp(50px, 4.45vw, 64px)
   }
 }
 
