@@ -45,6 +45,15 @@ def preview_script(document, archived=False):
     return document.replace(target, script + target, 1)
 
 
+def motion_script(document, archived=False):
+    prefix = "../../" if archived else "./"
+    script = f'    <script src="{prefix}motion.js" defer></script>'
+    if script in document:
+        return document
+    target = f'    <script src="{prefix}version-nav.js" defer></script>'
+    return document.replace(target, target + "\n" + script, 1)
+
+
 def without_navigation(document):
     before, remainder = document.split(START, 1)
     _, after = remainder.split(END, 1)
@@ -96,7 +105,7 @@ def main():
     manifest_path = ROOT / "versions.json"
     manifest = json.loads(manifest_path.read_text())
     versions = manifest["versions"]
-    document = entry_script(preview_script((ROOT / "index.html").read_text()))
+    document = entry_script(motion_script(preview_script((ROOT / "index.html").read_text())))
 
     if args.add:
         if not args.add.strip():
@@ -108,6 +117,7 @@ def main():
         archive = entry_script(document, archived=True).replace('href="./version-nav.css"', 'href="../../version-nav.css"')
         archive = archive.replace('src="./version-nav.js"', 'src="../../version-nav.js"')
         archive = archive.replace('src="./version-previews.js"', 'src="../../version-previews.js"')
+        archive = archive.replace('src="./motion.js"', 'src="../../motion.js"')
         (folder / "index.html").write_text(archive)
         (folder / "styles.css").write_bytes((ROOT / "styles.css").read_bytes())
 
@@ -118,7 +128,7 @@ def main():
     previews = {}
     for version in versions:
         page = ROOT / "versions" / str(version["id"]) / "index.html"
-        result = render(entry_script(preview_script(page.read_text(), archived=True), archived=True), versions, version["id"], archived=True)
+        result = render(entry_script(motion_script(preview_script(page.read_text(), archived=True), archived=True), archived=True), versions, version["id"], archived=True)
         page.write_text(result)
         previews[str(version["id"])] = without_navigation(result)
     # A static script also works under file://, where fetching HTML is restricted.

@@ -28,7 +28,7 @@ class VersionArchiveTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        for name in ["index.html", "styles.css", "versions.json", "version-previews.js", "version-entry.js"]:
+        for name in ["index.html", "styles.css", "versions.json", "version-previews.js", "version-entry.js", "motion.js"]:
             shutil.copy2(SOURCE / name, self.root / name)
         for name in ["scripts", "versions"]:
             shutil.copytree(SOURCE / name, self.root / name)
@@ -74,6 +74,7 @@ class VersionArchiveTests(unittest.TestCase):
             self.assertIn('href="../../version-nav.css"', page)
         newest = (self.root / f"versions/{self.next_id}/index.html").read_text()
         self.assertNotIn("version-entry.js", newest)
+        self.assertIn('src="../../motion.js"', newest)
         self.assertIn("A little &lt;more&gt; &amp; less", newest)
         self.assertIn(f'data-current="{self.next_id}"', newest)
         self.assertIn(f'href="./versions/{self.next_id}/index.html" aria-current="page"', (self.root / "index.html").read_text())
@@ -87,8 +88,11 @@ class VersionArchiveTests(unittest.TestCase):
         page = (self.root / "index.html").read_text()
         self.assertEqual(page.count('src="./version-entry.js"'), 1)
         self.assertLess(page.index('src="./version-entry.js"'), page.index('rel="stylesheet"'))
+        self.assertLess(page.index('src="./version-nav.js"'), page.index('src="./motion.js"'))
         for number in self.ids:
-            self.assertNotIn("version-entry.js", (self.root / f"versions/{number}/index.html").read_text())
+            archive = (self.root / f"versions/{number}/index.html").read_text()
+            self.assertNotIn("version-entry.js", archive)
+            self.assertLess(archive.index('src="../../version-nav.js"'), archive.index('src="../../motion.js"'))
         self.assertTrue(any(number < 0 for number in ids))
 
     def test_version_links_open_html_files_locally_and_when_hosted(self):
@@ -124,6 +128,7 @@ class VersionArchiveTests(unittest.TestCase):
             self.assertEqual(previews[str(number)], self.without_navigation(archived))
             self.assertNotIn('class="version-nav', previews[str(number)])
             self.assertIn('src="../../version-previews.js"', archived)
+            self.assertIn('src="../../motion.js"', archived)
 
     def test_new_copy_is_captured_in_the_next_preview(self):
         page = self.root / "index.html"
