@@ -179,4 +179,11 @@ if (timeline) {
     ticks[selected].focus({ preventScroll: true });
     settle(350);
   });
+
+  // A cached page must restore its own design, not the preview used to leave it.
+  window.addEventListener('pageshow', () => {
+    drag = null;
+    timeline.dataset.dragging = 'false';
+    reset();
+  });
 }
