@@ -80,12 +80,14 @@ class VersionArchiveTests(unittest.TestCase):
         self.assertIn(f'data-current="{self.next_id}"', newest)
         self.assertIn(f'href="./versions/{self.next_id}/index.html" aria-current="page"', (self.root / "index.html").read_text())
         self.assertEqual(len(json.loads((self.root / "versions.json").read_text())["versions"]), len(self.ids) + 1)
-        self.assertIn(f", {self.next_id}];", (self.root / "version-entry.js").read_text())
+        self.assertIn(f"const version = {self.next_id};", (self.root / "version-entry.js").read_text())
 
-    def test_only_homepage_randomizes_and_includes_the_complete_chronological_archive(self):
+    def test_only_homepage_opens_latest_version_and_archives_remain_shareable(self):
         entry = (self.root / "version-entry.js").read_text()
-        ids = json.loads(entry.split("const versions = ", 1)[1].split(";", 1)[0])
-        self.assertEqual(ids, self.ids)
+        latest = int(entry.split("const version = ", 1)[1].split(";", 1)[0])
+        self.assertEqual(latest, self.ids[-1])
+        self.assertNotIn("Math.random", entry)
+        self.assertIn("window.location.replace", entry)
         page = (self.root / "index.html").read_text()
         self.assertEqual(page.count('src="./version-entry.js"'), 1)
         self.assertLess(page.index('src="./version-entry.js"'), page.index('rel="stylesheet"'))
@@ -95,7 +97,7 @@ class VersionArchiveTests(unittest.TestCase):
             archive = (self.root / f"versions/{number}/index.html").read_text()
             self.assertNotIn("version-entry.js", archive)
             self.assertLess(archive.index('src="../../version-nav.js"'), archive.index('src="../../motion.js"'))
-        self.assertTrue(any(number < 0 for number in ids))
+        self.assertIn(f'data-current="{latest}"', page)
 
     def test_version_links_open_html_files_locally_and_when_hosted(self):
         pages = [self.root / "index.html", *sorted((self.root / "versions").glob("*/index.html"))]
