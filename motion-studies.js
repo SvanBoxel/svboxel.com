@@ -137,7 +137,35 @@
     return { paths:curves.map((p,i)=>strand(p,i<20?.37:.23,i===9||i===27)), points:[3,9,14,18].map((i,j)=>marker(curves[i],t*.035+j*.23,2.1)) };
   }
 
-  const studies = { fold:t=>fabric(t,false), weave:t=>fabric(t,true), interference, contours, relief, confluence };
+  function refraction(t) {
+    // A banded sun meets a perspective water plane. Two wave frequencies bend
+    // the reflected bands with depth; their envelope keeps the shoreline calm.
+    const cx = 280, cy = 206 + 2 * Math.sin(t * .11), radius = 126;
+    const paths = [strand(sample(128, u => ({
+      x: cx + radius * Math.cos(u * Math.PI * 2),
+      y: cy + radius * Math.sin(u * Math.PI * 2),
+    })), .7, true)];
+    for (let i = 0; i < 23; i++) {
+      const y = -116 + i * 10, half = Math.sqrt(radius * radius - y * y);
+      paths.push(strand(sample(72, u => {
+        const x = (u * 2 - 1) * half;
+        return { x: cx + x, y: cy + y + 1.8 * Math.sin(Math.PI * u) * Math.sin(x * .018 - t * .17) };
+      }), .45));
+    }
+    for (let i = 0; i < 21; i++) {
+      const depth = i / 20, y = 332 + 126 * depth ** 1.45;
+      const half = 88 + 105 * depth;
+      paths.push(strand(sample(110, u => {
+        const x = (u * 2 - 1) * half;
+        const envelope = Math.sin(Math.PI * u) ** 2;
+        const wave = Math.sin(x * .037 - t * .32 + i * .61) + .4 * Math.sin(x * .063 + t * .19 - i * .43);
+        return { x: cx + x, y: y + (2 + depth * 4) * envelope * wave };
+      }), .48 * (1 - depth * .7), i % 4 === 0));
+    }
+    return { paths, points: [] };
+  }
+
+  const studies = { fold:t=>fabric(t,false), weave:t=>fabric(t,true), interference, contours, relief, confluence, refraction };
   const api = { names:Object.keys(studies), frame:(name,t)=>studies[name](t) };
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   else root.websiteMotionStudies=api;

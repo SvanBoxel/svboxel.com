@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const studies = require('../motion-studies.js');
 
-test('six distinct studies evolve while retaining stable geometry and bounded coordinates', () => {
+test('distinct studies evolve while retaining stable geometry and bounded coordinates', () => {
   const signatures = new Set();
   for(const name of studies.names) {
     const initial = studies.frame(name,0);
@@ -25,14 +25,17 @@ test('six distinct studies evolve while retaining stable geometry and bounded co
       }
     }
   }
-  assert.equal(signatures.size,6);
+  assert.equal(signatures.size,studies.names.length);
 });
 
 test('static and reduced-motion posters match the first frame', () => {
   const root = path.resolve(__dirname,'..');
-  for(const page of ['index.html',...Array.from({length:6},(_,i)=>`versions/${i+10}/index.html`)]) {
+  const versions = JSON.parse(fs.readFileSync(path.join(root,'versions.json'),'utf8')).versions;
+  for(const page of ['index.html',...versions.map(v=>`versions/${v.id}/index.html`)]) {
     const html = fs.readFileSync(path.join(root,page),'utf8');
-    const name = html.match(/data-motion-study="([a-z]+)"/)[1];
+    const match = html.match(/data-motion-study="([a-z]+)"/);
+    if (!match) continue;
+    const name = match[1];
     const frame = studies.frame(name,0);
     const artwork = html.match(/<g class="contours"[^>]*>([\s\S]*?)<\/g>/)[1];
     const paths = [...artwork.matchAll(/<path d="([^"]*)"/g)].map(match=>match[1]);

@@ -80,13 +80,14 @@ class VersionArchiveTests(unittest.TestCase):
         self.assertIn(f'data-current="{self.next_id}"', newest)
         self.assertIn(f'href="./versions/{self.next_id}/index.html" aria-current="page"', (self.root / "index.html").read_text())
         self.assertEqual(len(json.loads((self.root / "versions.json").read_text())["versions"]), len(self.ids) + 1)
-        self.assertIn(f"const version = {self.next_id};", (self.root / "version-entry.js").read_text())
+        self.assertIn(f", {self.next_id}];", (self.root / "version-entry.js").read_text())
 
-    def test_only_homepage_opens_latest_version_and_archives_remain_shareable(self):
+    def test_only_homepage_randomizes_and_archives_remain_shareable(self):
         entry = (self.root / "version-entry.js").read_text()
-        latest = int(entry.split("const version = ", 1)[1].split(";", 1)[0])
-        self.assertEqual(latest, self.ids[-1])
-        self.assertNotIn("Math.random", entry)
+        candidates = json.loads(entry.split("const versions = ", 1)[1].split(";", 1)[0])
+        self.assertEqual(candidates, self.ids)
+        latest = self.ids[-1]
+        self.assertIn("Math.floor(Math.random() * versions.length)", entry)
         self.assertIn("window.location.replace", entry)
         page = (self.root / "index.html").read_text()
         self.assertEqual(page.count('src="./version-entry.js"'), 1)
