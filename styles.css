@@ -56,9 +56,8 @@ body .content.water-light {
   letter-spacing: .14em;
   text-transform: uppercase;
 }
-.eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 .bio {
-  font: 700 clamp(58px, 6.4vw, 104px)/1.02 'Cormorant Garamond', serif;
+  font: 700 clamp(58px, 6vw, 96px)/1.02 'Cormorant Garamond', serif;
   letter-spacing: -.045em;
 }
 .bio em { color: var(--accent); font-weight: inherit; }
