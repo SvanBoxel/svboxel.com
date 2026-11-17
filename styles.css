@@ -1,13 +1,13 @@
 @import url(https://fonts.googleapis.com/css?family=Cormorant+Garamond:700|Nunito+Sans:200,400);
 
 :root {
-  --paper: #f1eade;
-  --ink: #283d36;
-  --muted: #5c685d;
-  --accent: #a95d3c;
-  --line: #708578;
-  --sun: #dfaa83;
-  --rule: #283d362b;
+  --paper: #d2e1da;
+  --ink: #243f36;
+  --muted: #485f55;
+  --accent: #955035;
+  --line: #537568;
+  --sun: #dead86;
+  --rule: #243f362b;
   --timeline-ink: var(--ink);
   --timeline-paper: var(--paper);
 }
